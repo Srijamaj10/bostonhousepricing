@@ -1,48 +1,153 @@
 <!DOCTYPE html>
-<html >
-
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ML API</title>
-  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
-
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boston House Price Prediction</title>
+  <link href="https://fonts.googleapis.com/css?family=Arimo|Hind:300|Open+Sans+Condensed:300" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Arimo', sans-serif;
+      background: url('https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #333333;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.4); /* Adjusted opacity */
+    }
+    .container {
+      position: relative;
+      background: rgba(255, 255, 255, 0.7); /* Adjusted opacity */
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 700px; /* Adjusted width to fit the screen */
+      width: 100%;
+      z-index: 1;
+    }
+    h1 {
+      font-family: 'Arimo', sans-serif;
+      text-align: center;
+      color: #2c3e50; /* Darker color */
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    form .form-group {
+      display: flex;
+      flex-direction: column;
+      width: 48%; /* Adjusted width for side-by-side layout */
+      margin-bottom: 0.5rem; /* Reduced margin to fit the form */
+    }
+    form label {
+      font-weight: bold;
+      margin-bottom: 0.3rem; /* Reduced margin for compact layout */
+      color: #2c3e50; /* Darker color */
+      font-size: 0.9rem; /* Adjusted font size */
+    }
+    form input[type="text"] {
+      padding: 8px; /* Reduced padding */
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      font-size: 0.9rem; /* Adjusted font size */
+    }
+    form button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #2c3e50; /* Darker color */
+      color: #ffffff;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    form button:hover {
+      background-color: #1a242f; /* Darker hover color */
+    }
+    .prediction {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #2c3e50; /* Darker color */
+    }
+  </style>
 </head>
-
 <body>
- <div class="login">
-	<h1>Boston House Price Prediction</h1>
-
-     <!-- Main Input For Receiving Query to our ML -->
-    <form action="{{ url_for('predict')}}"method="post">
-      <input type="text" name="CRIM" placeholder="CRIM" required="required" /><br>
-    	<input type="text" name="ZN" placeholder="ZN" required="required" /><br>
-        <input type="text" name="INDUS" placeholder="INDUS" required="required" /><br>
-        <input type="text" name="CHAS" placeholder="CHAS" required="required" /><br>
-        <input type="text" name="NOX" placeholder="NOX" required="required" /><br>
-        <input type="text" name="RM" placeholder="RM" required="required" /><br>
-        <input type="text" name="Age" placeholder="Age" required="required" /><br>
-        <input type="text" name="DIS" placeholder="DIS" required="required" /><br>
-        <input type="text" name="RAD" placeholder="RAD" required="required" /><br>
-        <input type="text" name="TAX" placeholder="TAX" required="required" /><br>
-        <input type="text" name="PTRATIO" placeholder="PTRATIO" required="required" /><br>
-        <input type="text" name="B" placeholder="B" required="required" /><br>
-        <input type="text" name="LSTAT" placeholder="LSTAT" required="required" /><br>
-
-       
-
-        <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>BOSTON HOUSE PRICE PREDICTION</h1>
+    <form action="{{ url_for('predict') }}" method="post">
+      <div class="form-group">
+        <label for="CRIM">Per capita crime rate by town (CRIM):</label>
+        <input type="text" id="CRIM" name="CRIM" placeholder="Enter value for CRIM" required />
+      </div>
+      <div class="form-group">
+        <label for="ZN">Proportion of residential land zoned for lots over 25,000 sq.ft. (ZN):</label>
+        <input type="text" id="ZN" name="ZN" placeholder="Enter value for ZN" required />
+      </div>
+      <div class="form-group">
+        <label for="INDUS">Proportion of non-retail business acres per town (INDUS):</label>
+        <input type="text" id="INDUS" name="INDUS" placeholder="Enter value for INDUS" required />
+      </div>
+      <div class="form-group">
+        <label for="CHAS">Charles River dummy variable (1 if tract bounds river; 0 otherwise) (CHAS):</label>
+        <input type="text" id="CHAS" name="CHAS" placeholder="Enter value for CHAS" required />
+      </div>
+      <div class="form-group">
+        <label for="NOX">Nitric oxides concentration (parts per 10 million) (NOX):</label>
+        <input type="text" id="NOX" name="NOX" placeholder="Enter value for NOX" required />
+      </div>
+      <div class="form-group">
+        <label for="RM">Average number of rooms per dwelling (RM):</label>
+        <input type="text" id="RM" name="RM" placeholder="Enter value for RM" required />
+      </div>
+      <div class="form-group">
+        <label for="AGE">Proportion of owner-occupied units built prior to 1940 (AGE):</label>
+        <input type="text" id="AGE" name="AGE" placeholder="Enter value for AGE" required />
+      </div>
+      <div class="form-group">
+        <label for="DIS">Weighted distances to five Boston employment centres (DIS):</label>
+        <input type="text" id="DIS" name="DIS" placeholder="Enter value for DIS" required />
+      </div>
+      <div class="form-group">
+        <label for="RAD">Index of accessibility to radial highways (RAD):</label>
+        <input type="text" id="RAD" name="RAD" placeholder="Enter value for RAD" required />
+      </div>
+      <div class="form-group">
+        <label for="TAX">Full-value property-tax rate per $10,000 (TAX):</label>
+        <input type="text" id="TAX" name="TAX" placeholder="Enter value for TAX" required />
+      </div>
+      <div class="form-group">
+        <label for="PTRATIO">Pupil-teacher ratio by town (PTRATIO):</label>
+        <input type="text" id="PTRATIO" name="PTRATIO" placeholder="Enter value for PTRATIO" required />
+      </div>
+      <div class="form-group">
+        <label for="B">1000(Bk - 0.63)^2 where Bk is the proportion of black people by town (B):</label>
+        <input type="text" id="B" name="B" placeholder="Enter value for B" required />
+      </div>
+      <div class="form-group">
+        <label for="LSTAT">Percentage of lower status of the population (LSTAT):</label>
+        <input type="text" id="LSTAT" name="LSTAT" placeholder="Enter value for LSTAT" required />
+      </div>
+      <button type="submit">Predict</button>
     </form>
-
-   <br>
-   <br>
-  
-   
- </div>
- {{prediction_text}}
-
+    <div class="prediction">{{ prediction_text }}</div>
+  </div>
 </body>
 </html>
